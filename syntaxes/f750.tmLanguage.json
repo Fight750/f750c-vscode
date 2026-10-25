@@ -1,0 +1,336 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "F750 Assembly",
+    "scopeName": "source.f750",
+    "fileTypes": [
+        "f750"
+    ],
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#section"
+        },
+        {
+            "include": "#labels"
+        },
+        {
+            "include": "#declarations"
+        },
+        {
+            "include": "#macros"
+        },
+        {
+            "include": "#extern"
+        },
+        {
+            "include": "#engine-symbol"
+        },
+        {
+            "include": "#address-references"
+        },
+        {
+            "include": "#registers"
+        },
+        {
+            "include": "#data-types"
+        },
+        {
+            "include": "#opcodes"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#symbols"
+        },
+        {
+            "include": "#operators"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.semicolon.f750",
+                    "match": ";.*$"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.f750",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.f750",
+                            "match": "\\\\(?:[\\\\\"nrt0]|x[0-9a-fA-F]{2})"
+                        }
+                    ]
+                }
+            ]
+        },
+        "section": {
+            "patterns": [
+                {
+                    "name": "meta.section.f750",
+                    "match": "^\\s*(\\.[A-Za-z_][A-Za-z0-9_]*)(?=\\s*:\\s*(?:;.*)?$)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.function.label.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "labels": {
+            "patterns": [
+                {
+                    "name": "meta.label.f750",
+                    "match": "^\\s*(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)(:)(?=\\s*(?:;.*)?$)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "2": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "3": {
+                            "name": "entity.name.function.label.f750"
+                        },
+                        "4": {
+                            "name": "punctuation.separator.key-value.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "declarations": {
+            "patterns": [
+                {
+                    "name": "meta.declaration.f750",
+                    "match": "^\\s*(?:(pub)\\s+)?(?:(const)\\s+)?(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)(:)(?=\\s*(?:byte|word|dword|qword|float|double)\\b|\\s*\")",
+                    "captures": {
+                        "1": {
+                            "name": "storage.modifier.visibility.f750"
+                        },
+                        "2": {
+                            "name": "storage.modifier.constant.f750"
+                        },
+                        "3": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "4": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "5": {
+                            "name": "variable.other.definition.f750"
+                        },
+                        "6": {
+                            "name": "punctuation.separator.key-value.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "macros": {
+            "patterns": [
+                {
+                    "name": "keyword.control.directive.f750",
+                    "match": "@[A-Za-z_][A-Za-z0-9_]*\\b"
+                }
+            ]
+        },
+        "extern": {
+            "patterns": [
+                {
+                    "name": "meta.external-symbol.f750",
+                    "match": "\\b(_extern)\\s+(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.other.external.f750"
+                        },
+                        "2": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "3": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "4": {
+                            "name": "entity.name.function.external.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "engine-symbol": {
+            "patterns": [
+                {
+                    "name": "meta.engine-symbol.f750",
+                    "match": "(\\#)([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.engine-symbol.f750"
+                        },
+                        "2": {
+                            "name": "support.function.engine.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "address-references": {
+            "patterns": [
+                {
+                    "name": "meta.address-reference.f750",
+                    "match": "(&)(?:(const)\\s+)?(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.address-of.f750"
+                        },
+                        "2": {
+                            "name": "storage.modifier.constant.f750"
+                        },
+                        "3": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "4": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "5": {
+                            "name": "variable.other.reference.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "registers": {
+            "patterns": [
+                {
+                    "name": "variable.language.register.f750",
+                    "match": "\\b(?:a|b|c|d|sp|bp|si|di|ip|lca|lcb|la|lb|lc|ld|le|lf|lg|lh)(?:8|16|32|64)\\b"
+                }
+            ]
+        },
+        "data-types": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.f750",
+                    "match": "\\b(?:byte|word|dword|qword|float|double)\\b"
+                }
+            ]
+        },
+        "opcodes": {
+            "patterns": [
+                {
+                    "name": "keyword.control.instruction.f750",
+                    "match": "\\b(?:engcall|nop|call|ret|stackalloc|stackfree|exit|retf|malloc|free|mov|jmp|jz|jnz|je|jne|js|jns|jo|jno|jc|jb|jnae|jnc|jae|jnb|jp|jnp|jbe|jna|ja|jnbe|jl|jnle|jge|jnl|jle|jng|jg|jnge|jer|jnok|jner|jok|cmp|add|sub|mul|div|mod|push|pop|and|or|xor|not)\\b"
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.hex.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?0[xX][0-9a-fA-F]+\\b"
+                },
+                {
+                    "name": "constant.numeric.float.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?(?:[0-9]+\\.[0-9]*|\\.[0-9]+)(?:[eE][-+]?[0-9]+)?\\b"
+                },
+                {
+                    "name": "constant.numeric.integer.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?[0-9]+\\b"
+                }
+            ]
+        },
+        "symbols": {
+            "patterns": [
+                {
+                    "name": "meta.label.reference.f750",
+                    "match": "(?<=\\bcall\\s)(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "2": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "3": {
+                            "name": "entity.name.function.label.f750"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.label.reference.f750",
+                    "match": "(?<![A-Za-z0-9_.:])(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?(_[A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.f750",
+                            "patterns": [
+                                {
+                                    "name": "keyword.operator.namespace.f750",
+                                    "match": "::"
+                                }
+                            ]
+                        },
+                        "2": {
+                            "name": "keyword.operator.namespace.f750"
+                        },
+                        "3": {
+                            "name": "entity.name.function.label.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.arithmetic.f750",
+                    "match": "[+*/-]"
+                },
+                {
+                    "name": "punctuation.separator.comma.f750",
+                    "match": ","
+                }
+            ]
+        }
+    }
+}

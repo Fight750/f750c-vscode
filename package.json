@@ -1,0 +1,57 @@
+{
+    "name": "f750-vscode",
+    "displayName": "f750-vscode",
+    "description": "F750 language support for VSCode.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.140.0"
+    },
+    "categories": ["Programming Languages"],
+    "activationEvents": [],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "f750-vscode.helloWorld",
+                "title": "Hello World"
+            }
+        ],
+        "languages": [
+            {
+                "id": "f750",
+                "aliases": ["Fight750 State Script"],
+                "extensions": [".f750"],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "f750",
+                "scopeName": "source.f750",
+                "path": "./syntaxes/f750.tmLanguage.json"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "yarn run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "yarn run compile && yarn run lint",
+        "lint": "eslint src",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.140.0",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "24.x",
+        "typescript-eslint": "^8.61.1",
+        "eslint": "^10.5.0",
+        "typescript": "^6.0.3",
+        "@vscode/test-cli": "^0.0.15",
+        "@vscode/test-electron": "^3.0.0"
+    },
+    "overrides": {
+        "diff": "^8.0.4",
+        "serialize-javascript": "^7.0.6"
+    }
+}
