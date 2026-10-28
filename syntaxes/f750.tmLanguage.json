@@ -2,9 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "name": "F750 Assembly",
     "scopeName": "source.f750",
-    "fileTypes": [
-        "f750"
-    ],
+    "fileTypes": ["f750"],
     "patterns": [
         {
             "include": "#comments"
@@ -13,10 +11,13 @@
             "include": "#strings"
         },
         {
-            "include": "#section"
+            "include": "#reserved-words"
         },
         {
             "include": "#labels"
+        },
+        {
+            "include": "#preprocessor"
         },
         {
             "include": "#declarations"
@@ -53,6 +54,30 @@
         }
     ],
     "repository": {
+        "preprocessor": {
+            "patterns": [
+                {
+                    "name": "meta.preprocessor.use.f750",
+                    "match": "^[ \\t]*(#use)\\b[ \\t]+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.control.directive.preprocessor.f750"
+                        },
+                        "2": {
+                            "name": "entity.name.namespace.f750"
+                        }
+                    }
+                }
+            ]
+        },
+        "reserved-words": {
+            "patterns": [
+                {
+                    "name": "keyword.other.reserved.f750",
+                    "match": "\\b(?:const|extern|struct|pub|global)\\b"
+                }
+            ]
+        },
         "comments": {
             "patterns": [
                 {
@@ -120,14 +145,19 @@
         "declarations": {
             "patterns": [
                 {
-                    "name": "meta.declaration.f750",
-                    "match": "^\\s*(?:(pub)\\s+)?(?:(const)\\s+)?(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)(:)(?=\\s*(?:byte|word|dword|qword|float|double)\\b|\\s*\")",
+                    "name": "meta.declaration.static.f750",
+                    "match": "^[ \\t]*(\\.static)\\b((?:[ \\t]+(?:pub|global|extern|const)\\b)*?)[ \\t]+(?:([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*(?:::[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)*)(::))?([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)(:)",
                     "captures": {
                         "1": {
-                            "name": "storage.modifier.visibility.f750"
+                            "name": "storage.modifier.static.f750"
                         },
                         "2": {
-                            "name": "storage.modifier.constant.f750"
+                            "patterns": [
+                                {
+                                    "name": "storage.modifier.f750",
+                                    "match": "\\b(?:pub|global|extern|const)\\b"
+                                }
+                            ]
                         },
                         "3": {
                             "name": "entity.name.namespace.f750",
@@ -194,7 +224,7 @@
                     "match": "(\\#)([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)",
                     "captures": {
                         "1": {
-                            "name": "punctuation.definition.engine-symbol.f750"
+                            "name": "keyword.operator.engine-symbol.f750"
                         },
                         "2": {
                             "name": "support.function.engine.f750"
@@ -261,8 +291,20 @@
         "numbers": {
             "patterns": [
                 {
+                    "name": "constant.numeric.binary.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?0[bB][01]+(?![A-Za-z0-9_])"
+                },
+                {
+                    "name": "constant.numeric.octal.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?0[oO][0-7]+(?![A-Za-z0-9_])"
+                },
+                {
                     "name": "constant.numeric.hex.f750",
-                    "match": "(?<![A-Za-z0-9_])[-+]?0[xX][0-9a-fA-F]+\\b"
+                    "match": "(?<![A-Za-z0-9_])[-+]?0[xX][0-9a-fA-F]+(?![A-Za-z0-9_])"
+                },
+                {
+                    "name": "constant.numeric.decimal.f750",
+                    "match": "(?<![A-Za-z0-9_])[-+]?0[dD][0-9]+(?![A-Za-z0-9_])"
                 },
                 {
                     "name": "constant.numeric.float.f750",

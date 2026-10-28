@@ -1,7 +1,10 @@
-.data:
-    const A: dword 1
+#use fscript.move.character.chen.Util
 
-_ssr_state_init:
+.static const A: dword 1
+.static const SOME_STRING: "Hello, world!"
+.static combo_counter: dword 0
+
+global extern pub _ssr_state_init:
     @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnActive, _on_active
     @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnContact, _on_contact
     @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnHit, _on_hit
@@ -66,5 +69,5 @@ _on_notify_stage:
     exit
 
 _on_hit:
-    call _fscript.move.character.chen.util::proc_play_sword_slash_attack_particle
+    call _Util::proc_play_sword_slash_attack_particle
     exit

@@ -4,3 +4,5 @@ node_modules
 test
 .vscode-test/
 *.vsix
+
+.yarn/install-state.gz
