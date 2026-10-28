@@ -1,0 +1,70 @@
+.data:
+    const A: dword 1
+
+_ssr_state_init:
+    @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnActive, _on_active
+    @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnContact, _on_contact
+    @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnHit, _on_hit
+    @engcall #SSREngCall.State.AddMoveTrigger, #SSREnum.MoveTriggerEvent.OnNotifyStage, _on_notify_stage
+    exit
+
+_ssr_state_entry:
+    @engcall #SSREngCall.Entity.Animation.ApplyNeutralPose, byte 1
+    mov #SSRParam.Entity.StateData.ShouldApplySlotNeutralPose, byte 1
+
+    exit
+
+_on_active:
+    @engcall #SSREngCall.Entity.PlaySound, "chr/chen/battle/vo/dp"
+    exit
+
+_on_contact:
+    @engcall #SSREngCall.Entity.PlaySound, "chr/chen/battle/sfx/dp/1"
+    mov a64, #SSRParam.Move.AttackStage
+
+    @if a64, qword 1, jge
+        ; ghost color
+        @engcall #SSREngCall.Util.HexToColor, "cb0000"
+        mov #SSRParam.Entity.StateData.GhostFX.Color, a64
+        mov #SSRParam.Entity.StateData.GhostFX.SpawnInterval, float 0.04333334
+        mov #SSRParam.Entity.StateData.GhostFX.MaxGhosts, 20
+
+        @engcall #SSREngCall.Camera.PlayCameraShake, "chr/chen/battle/fx/camerashake", "dp_1"
+
+        ; fx
+        mov a64, #SSREngCall.Entity.PlayFx
+        push "chr/chen/battle/fx/prefab/skl_214s/hit/0"
+        push #SSREnum.Mapped.CharacterFXSocketType.Self
+        push float 0
+        push qword 0
+        push byte 0
+        engcall
+
+    @end
+
+    exit 
+
+_on_notify_stage:
+    @engcall #SSREngCall.Util.HexToColor, "cb0000"
+    mov #SSRParam.Entity.StateData.GhostFX.Color, a64
+    mov #SSRParam.Entity.StateData.GhostFX.SpawnInterval, float 0.01333334
+    mov #SSRParam.Entity.StateData.GhostFX.MaxGhosts, 40
+    mov #SSRParam.Entity.StateData.GhostFX.FadeSpeed, float 10
+
+    mov a64, #SSRParam.Move.AttackStage
+    @if a64, qword 1, je
+        @engcall #SSREngCall.Entity.AddNormalizedForce, 500, 2000
+        mov #SSRParam.Player.FrameData.ForcedAirborneFrames, dword 5
+        @engcall #SSREngCall.Entity.PlaySoundEx, "chr/chen/battle/sfx/skl_214h/0", float 0.4, float 1, byte 0
+
+    @elseif a64, qword 2, je
+        @engcall #SSREngCall.Entity.GhostFX.Remove
+        @engcall #SSREngCall.Player.Animation.AddUnmanagedAnimation, "std/jump_down", float 0.1, byte 0
+
+    @end
+
+    exit
+
+_on_hit:
+    call _fscript.move.character.chen.util::proc_play_sword_slash_attack_particle
+    exit
